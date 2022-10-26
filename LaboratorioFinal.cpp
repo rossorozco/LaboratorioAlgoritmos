@@ -21,25 +21,17 @@ using namespace std; //Permite tener un alcance directo a todas las funciones de
 int main(){
 	
 	ofstream  escritura; //Paso 2
-	escritura.open("datos.txt",ios::out); //paso 3 (ios::out es poder escribir en el archivo(escritura))
+	
+	//Decirle que agrege informacion al final (que no lo borre) agregamos ios::app (y ios::app sirve para poder escribir en el archivo y que no borre lo que teniamos(lo añade al final)
+	escritura.open("datos.txt",ios::out|ios::app); //paso 3 (ios::out es para poder escribir en el archivo(escritura) pero borra lo que teniamos)
 	//Paso 5 (Validacion de apertura del archivo)
 	if(escritura.is_open()){
 		cout<<"Archivo abierto"<<endl;
-		escritura<<"Hola, hola, buenos dias"<<endl;
+		escritura<<"Hola, hola, buenos dias segundo"<<endl;//paso 5
 	}
 	else{
 		cout<<"Archivo no abierto"<<endl;
 	}
-	/*Segunda forma de hacerlo
-	if(!escritura.fail()){
-		cout<<"Archivo abierto"<<endl;
-		escritura<<"Hola, hola, buenos dias, segunda forma de verificacion"<<endl;
-	}
-	else{
-		cout<<"Archivo no abierto"<<endl;
-	}
-	*/
-	
 	escritura.close(); //Paso 6
 	return 0;
 	system ("Pause");
