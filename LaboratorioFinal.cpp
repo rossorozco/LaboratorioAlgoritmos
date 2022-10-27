@@ -58,11 +58,12 @@ void busquedaDpi();
 void busquedaCodigo();
 
 //Declaramos variables globales
-char nombre[30], nombreDos[30], apellido[30], apelliDos[30], resp[1];
-char dpi[30],salario[30],codigo[30];
+char nombre[30], nombreDos[30], apellido[30], apelliDos[30];
+char dpi[30],salario[30],codigo[30]; 
 bool encontrado=false;//Para saber cuando fue encontrado un registro minimo
 char auxDpi[30];//Para compararla con dpi
 char auxCodigo[30];//Para compararla con codigo
+int clave=0, auxclave=0;//La variable (clave) para crear clave y auxclave para que cada vez que se solicite datos verificamos que no haya otro registro con la misma clave
 
 int main(){
 	menu();
@@ -91,16 +92,16 @@ void menu(){
 				ingresoDatos();			
 			break;
 			case 2:
-				buscar();			
+				buscar();//empleados es rescrito por auxiliar de la funcion eliminarEmpleado();			
 			break;
 			case 3:
-				eliminarEmpleado();			
+				eliminarEmpleado();	//eliminar reescribe los datos que estan guardados en auxiliar		
 			break;
 			case 4:
-				mostrarEmpleados();			
+				mostrarEmpleados();	//empleados es rescrito por auxiliar de la funcion eliminarEmpleado();	
 			break;
 			case 5:
-				reporteMayorSalario();			
+				reporteMayorSalario();
 			break;
 			case 6:
 				salir();
@@ -108,84 +109,101 @@ void menu(){
             	break;		
 			break;
 			default: 
-				cout<<"La opción que ingresó es incorrecta.";		
+				cout<<"La opcion que ingreso es incorrecta."<<endl;
+				salir();
+				repetir = false;
+            	break;		
 		}
 	}while(repetir!=false);
 }
 
 void ingresoDatos(){	
-ofstream  escritura; //Paso 2
-//Decirle que agrege informacion al final (que no lo borre) agregamos ios::app (y ios::app sirve para poder escribir en el archivo y que no borre lo que teniamos(lo añade al final)
-escritura.open("empleados.txt",ios::out|ios::app); //paso 3 (ios::out es para poder escribir en el archivo(escritura) pero borra lo que teniamos)
-//Paso 4 (Validacion de apertura del archivo)
-if(escritura.is_open()){
-	//Ingreso de datos
-	fflush(stdin);
-	cout<<"\n POR FAVOR ingrese los datos sin puntos ni comas \n";
-	cout<<"\n Ingrese su Dpi: ";
-	cin>>dpi;
-	cout<<"\n Ingrese su Codigo de empleado: ";
-	cin>>codigo;
-	cout<<"\n Ingrese su primer nombre: ";
-	cin>>nombre;
-	cout<<"\n Ingrese su segundo nombre: ";
-	cin>>nombreDos;
-	cout<<"\n Ingrese su primer apellido: ";
-	cin>>apellido;
-	cout<<"\n Ingrese su segundo apellido: ";
-	cin>>apelliDos;
-	cout<<"\n Ingrese su salario: ";
-	cin>>salario;
-	
-	//Escribiendo datos en el archivo
-	escritura<<dpi<<" "<<codigo<<" "<<nombre<<" "<<nombreDos<<" "<<apellido<<" "<<apelliDos<<" "<<salario<<endl;
-}
-else{
-	cout<<"Archivo no abierto"<<endl;
-}
-escritura.close(); //Paso 6
+	ofstream escritura; //Paso 2
+	ifstream consulta;
+	bool repet=false;//verifica si no hay repetidos
+	//Decirle que agrege informacion al final (que no lo borre) agregamos ios::app (y ios::app sirve para poder escribir en el archivo y que no borre lo que teniamos(lo añade al final)
+	escritura.open("empleados.txt",ios::out|ios::app); //paso 3 (ios::out es para poder escribir en el archivo(escritura) pero borra lo que teniamos)
+	consulta.open("empleados.txt",ios::in);//Para ver si ya se registro un archivo para ponerle una clave al nuevo archivo
+	//Paso 4 (Validacion de apertura del archivo)
+	if(escritura.is_open() && consulta.is_open()){
+		//Ingreso de datos
+		fflush(stdin);
+		cout<<"\n Ingrese la clave: ";
+		cin>>auxclave;
+		consulta>>clave;
+		while(!consulta.eof()){//Para buscar si hay alguna clave
+			consulta>>dpi>>codigo>>nombre>>nombreDos>>apellido>>apelliDos>>salario;//si se cumple la condicion va ha hacer lectura nuevamente
+			if(clave==auxclave){//si se cumple la condicion es que ya hay registro y no se puede registrar nuevamente
+				cout<<"Ya exite un registro con esta clave"<<endl;
+				repet=true;
+				break;//Salida del ciclo
+			}
+			consulta>>clave;//Consulta adelantada
+		}
+		if(repet==false){//no se encontro nunca un registro con la clave ingresada por usuario entonces se procede a ingresar datos
+			cout<<"\n POR FAVOR ingrese los datos sin puntos ni comas \n";
+			cout<<"\n Ingrese su Dpi: ";
+			cin>>dpi;
+			cout<<"\n Ingrese su Codigo de empleado: ";
+			cin>>codigo;
+			cout<<"\n Ingrese su primer nombre: ";
+			cin>>nombre;
+			cout<<"\n Ingrese su segundo nombre: ";
+			cin>>nombreDos;
+			cout<<"\n Ingrese su primer apellido: ";
+			cin>>apellido;
+			cout<<"\n Ingrese su segundo apellido: ";
+			cin>>apelliDos;
+			cout<<"\n Ingrese su salario: ";
+			cin>>salario;
+			//Escribiendo datos en el archivo
+			escritura<<auxclave<<" "<<dpi<<" "<<codigo<<" "<<nombre<<" "<<nombreDos<<" "<<apellido<<" "<<apelliDos<<" "<<salario<<endl;
+			cout<<" Registro agregado "<<endl;
+		}
+	}
+	else{
+		cout<<"Archivo no se pudo abrir o no ha sido creado"<<endl;
+	}
+	escritura.close(); //Paso 6
+	consulta.close();//cierre de consulta
 }//Fin funcion ingresoDatos();
 
 void mostrarEmpleados(){
-//Lectura del archivo
-//Paso 2
-ifstream lectura;
-//Paso 3
-lectura.open("empleados.txt",ios::out|ios::in);//ios::in(para poder leer los datos)
-//Paso 4
-if(lectura.is_open()){
-	//cout<<"Archivo abierto"<<endl;
-	lectura>>dpi; //Para ver si no ha llegado al final del archivo y asi seguirlo leyendo con while(!lectura.eof())
-	cout<<"Registro del archivo empleados.txt"<<endl;
-	cout<<"-------------------------------------"<<endl;
-	while(!lectura.eof()){//eof (while lectura doesn't end of file)
-		lectura>>codigo;
-		lectura>>nombre;
-		lectura>>nombreDos;
-		lectura>>apellido;
-		lectura>>apelliDos;
-		lectura>>salario;
-		cout<<"Dpi :"<<dpi<<endl;
-		cout<<"Codigo :"<<codigo<<endl;
-		cout<<"Primer nombre :"<<nombre<<endl;
-		cout<<"Segundo nombre :"<<nombreDos<<endl;
-		cout<<"Primer apellido :"<<apellido<<endl;
-		cout<<"Segundo apellido :"<<apelliDos<<endl;
-		cout<<"Salario :"<<salario<<endl;
-		lectura>>dpi;
+	//Lectura del archivo
+	//Paso 2
+	ifstream lectura;
+	//Paso 3
+	lectura.open("auxiliar.txt",ios::out|ios::in);//ios::in(para poder leer los datos)
+	//Paso 4
+	if(lectura.is_open()){
+		//cout<<"Archivo abierto"<<endl;
+		lectura>>clave; //Para ver si no ha llegado al final del archivo y asi seguirlo leyendo con while(!lectura.eof())
+		cout<<"Registro del archivo empleados.txt"<<endl;
+		cout<<"-------------------------------------"<<endl;
+		while(!lectura.eof()){//eof (while lectura doesn't end of file)
+			lectura>>dpi>>codigo>>nombre>>nombreDos>>apellido>>apelliDos>>salario;
+			cout<<"Clave :"<<clave<<endl;
+			cout<<"Dpi :"<<dpi<<endl;
+			cout<<"Codigo :"<<codigo<<endl;
+			cout<<"Primer nombre :"<<nombre<<endl;
+			cout<<"Segundo nombre :"<<nombreDos<<endl;
+			cout<<"Primer apellido :"<<apellido<<endl;
+			cout<<"Segundo apellido :"<<apelliDos<<endl;
+			cout<<"Salario :"<<salario<<endl;
+			lectura>>clave;
+		}
 	}
-}
-else{
-	cout<<"Archivo no abierto"<<endl;
-}
-//paso 6
-lectura.close();
+	else{
+		cout<<"Archivo no se pudo abrir, no ha sido creado"<<endl;
+	}
+	//paso 6
+	lectura.close();
 }//fin funcion mostrarEmpleados();
 
 
 void buscar(){
 	ifstream lectura;//Declaramos variable de tipo lectura
-	lectura.open("empleados.txt",ios::out|ios::in); //Abrimos el archivo
+	lectura.open("auxiliar.txt",ios::out|ios::in); //Abrimos el archivo
 	int opcion_busqueda;
 	bool repeticion=false;
 	do
@@ -201,46 +219,17 @@ void buscar(){
 			case 1:
 				cout <<" BUSQUEDA DPI "<< endl;
 				if(lectura.is_open()){
-				cout<<"Ingresa el DPI a buscar: ";
-				cin>>auxDpi;
-				lectura>>dpi;//Lectura adelantada
-				encontrado=false;
-				while(!lectura.eof()){
-					lectura>>codigo>>nombre>>nombreDos>>apellido>>apelliDos>>salario;//Leyendo todos los campos del registro
-					//comparar cada registro para ver si es encontrado
-					if(strcmp(auxDpi,dpi)==0)//strcmp (funcion de comparacion de cadenas)(recibe dos parametros(dos cadenas a comparar))(devuelve dos valores 0 cuando son iguales y 1 cuando no)
-					{
-						cout<<"-------------------------------------"<<endl;
-						cout<<"Dpi :"<<dpi<<endl;
-						cout<<"Codigo :"<<codigo<<endl;
-						cout<<"Primer nombre :"<<nombre<<endl;
-						cout<<"Segundo nombre :"<<nombreDos<<endl;
-						cout<<"Primer apellido :"<<apellido<<endl;
-						cout<<"Segundo apellido :"<<apelliDos<<endl;
-						cout<<"Salario :"<<salario<<endl;
-						cout<<"-------------------------------------"<<endl;
-						encontrado=true;
-					}
-					lectura>>dpi;//lectura adelantada
-				}
-					if(encontrado==false){
-						cout<<"No hay registros con el Dpi: "<<auxDpi<<endl;
-					}
-				}
-				break;
-			case 2:
-				cout << " BUSQUEDA POR CODIGO DE EMPLEADO "<< endl;
-				if(lectura.is_open()){
-					cout<<"Ingresa el codigo a buscar: ";
-					cin>>auxCodigo;
-					lectura>>dpi;//Lectura adelantada
+					cout<<"Ingresa el DPI a buscar: ";
+					cin>>auxDpi;
+					lectura>>clave;//Lectura adelantada
 					encontrado=false;
 					while(!lectura.eof()){
-						lectura>>codigo>>nombre>>nombreDos>>apellido>>apelliDos>>salario;//Leyendo todos los campos del registro
+						lectura>>dpi>>codigo>>nombre>>nombreDos>>apellido>>apelliDos>>salario;//Leyendo todos los campos del registro
 						//comparar cada registro para ver si es encontrado
-						if(strcmp(auxCodigo,codigo)==0)//strcmp (funcion de comparacion de cadenas)(recibe dos parametros(dos cadenas a comparar))(devuelve dos valores 0 cuando son iguales y 1 cuando no)
+						if(strcmp(auxDpi,dpi)==0)//strcmp (funcion de comparacion de cadenas)(recibe dos parametros(dos cadenas a comparar))(devuelve dos valores 0 cuando son iguales y 1 cuando no)
 						{
 							cout<<"-------------------------------------"<<endl;
+							cout<<"Clave :"<<clave<<endl;
 							cout<<"Dpi :"<<dpi<<endl;
 							cout<<"Codigo :"<<codigo<<endl;
 							cout<<"Primer nombre :"<<nombre<<endl;
@@ -251,7 +240,38 @@ void buscar(){
 							cout<<"-------------------------------------"<<endl;
 							encontrado=true;
 						}
-						lectura>>dpi;//lectura adelantada
+						lectura>>clave;//lectura adelantada
+					}
+					if(encontrado==false){
+						cout<<"No hay registros con el Dpi: "<<auxDpi<<endl;
+					}
+				}
+				break;
+			case 2:
+				cout << " BUSQUEDA POR CODIGO DE EMPLEADO "<< endl;
+				if(lectura.is_open()){
+					cout<<"Ingresa el codigo a buscar: ";
+					cin>>auxCodigo;
+					lectura>>clave;//Lectura adelantada
+					encontrado=false;
+					while(!lectura.eof()){
+						lectura>>dpi>>codigo>>nombre>>nombreDos>>apellido>>apelliDos>>salario;//Leyendo todos los campos del registro
+						//comparar cada registro para ver si es encontrado
+						if(strcmp(auxCodigo,codigo)==0)//strcmp (funcion de comparacion de cadenas)(recibe dos parametros(dos cadenas a comparar))(devuelve dos valores 0 cuando son iguales y 1 cuando no)
+						{
+							cout<<"-------------------------------------"<<endl;
+							cout<<"Clave :"<<clave<<endl;
+							cout<<"Dpi :"<<dpi<<endl;
+							cout<<"Codigo :"<<codigo<<endl;
+							cout<<"Primer nombre :"<<nombre<<endl;
+							cout<<"Segundo nombre :"<<nombreDos<<endl;
+							cout<<"Primer apellido :"<<apellido<<endl;
+							cout<<"Segundo apellido :"<<apelliDos<<endl;
+							cout<<"Salario :"<<salario<<endl;
+							cout<<"-------------------------------------"<<endl;
+							encontrado=true;
+						}
+						lectura>>clave;//lectura adelantada
 					}
 					if(encontrado==false){
 						cout<<"No hay registros con el codigo: "<<auxCodigo<<endl;
@@ -259,7 +279,6 @@ void buscar(){
 				}
 				else{
 					cout<<"No se pudo abrir el archivo, aun no ha sido creado"<<endl;
-					cout<<"O contiene un error"<<endl;
 				}
 				//Cerrando el archivo
 				lectura.close();
@@ -274,6 +293,31 @@ void buscar(){
 	}while(repeticion!=true);
 }
 void eliminarEmpleado(){
+	ofstream eliminar;
+	ifstream lectura;
+	encontrado=false;
+	int auxsalida=0;
+	eliminar.open("auxiliar.txt",ios::out);
+	lectura.open("empleados.txt",ios::in);
+	if(eliminar.is_open() && lectura.is_open()){
+		cout<<"Ingresa la clave que quieres eliminar: ";
+		cin>>auxsalida;
+		lectura>>clave;
+		while(!lectura.eof()){
+			lectura>>dpi>>codigo>>nombre>>nombreDos>>apellido>>apelliDos>>salario;
+			if(auxsalida==clave){
+				encontrado=true;
+				cout<<"Registro eliminado"<<endl;
+			}
+			else{
+				eliminar<<clave<<" "<<dpi<<" "<<codigo<<" "<<nombre<<" "<<nombreDos<<" "<<apellido<<" "<<apelliDos<<" "<<salario<<endl;	
+			}
+			lectura>>clave;
+		}
+	}
+	else{
+		cout<<"No se pudo abrir el archivo, aun no ha sido creado"<<endl;
+	}
 }
 void reporteMayorSalario(){	
 }
