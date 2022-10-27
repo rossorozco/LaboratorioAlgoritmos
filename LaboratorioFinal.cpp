@@ -53,11 +53,16 @@ void reporteMayorSalario();
 void salir();
 void menu();
 
+//declaracion de funciones para busqueda por dpi y codigo
+void busquedaDpi();
+void busquedaCodigo();
+
 //Declaramos variables globales
 char nombre[30], nombreDos[30], apellido[30], apelliDos[30], resp[1];
 char dpi[30],salario[30],codigo[30];
 bool encontrado=false;//Para saber cuando fue encontrado un registro minimo
-char auxDpi[30];//Para compararla con string dpi
+char auxDpi[30];//Para compararla con dpi
+char auxCodigo[30];//Para compararla con codigo
 
 int main(){
 	menu();
@@ -177,42 +182,96 @@ else{
 lectura.close();
 }//fin funcion mostrarEmpleados();
 
+
 void buscar(){
 	ifstream lectura;//Declaramos variable de tipo lectura
 	lectura.open("empleados.txt",ios::out|ios::in); //Abrimos el archivo
-	if(lectura.is_open()){
-		cout<<"Ingresa el DPI a buscar: ";
-		cin>>auxDpi;
-		lectura>>dpi;//Lectura adelantada
-		encontrado=false;
-		while(!lectura.eof()){
-			lectura>>codigo>>nombre>>nombreDos>>apellido>>apelliDos>>salario;//Leyendo todos los campos del registro
-			//comparar cada registro para ver si es encontrado
-			if(strcmp(auxDpi,dpi)==0)//strcmp (funcion de comparacion de cadenas)(recibe dos parametros(dos cadenas a comparar))(devuelve dos valores 0 cuando son iguales y 1 cuando no)
-			{
-				cout<<"-------------------------------------"<<endl;
-				cout<<"Dpi :"<<dpi<<endl;
-				cout<<"Codigo :"<<codigo<<endl;
-				cout<<"Primer nombre :"<<nombre<<endl;
-				cout<<"Segundo nombre :"<<nombreDos<<endl;
-				cout<<"Primer apellido :"<<apellido<<endl;
-				cout<<"Segundo apellido :"<<apelliDos<<endl;
-				cout<<"Salario :"<<salario<<endl;
-				cout<<"-------------------------------------"<<endl;
-				encontrado=true;
-			}
-			lectura>>dpi;//lectura adelantada
+	int opcion_busqueda;
+	bool repeticion=false;
+	do
+	{
+		cout<< endl <<" BUSQUEDA DE EMPLEADOS\n";
+		cout<< endl <<"Ingrese que tipo de busqueda desea realizar\n";
+		cout<< endl <<"1. Desea buscar por DPI?\n";
+		cout<< endl <<"2. Desea buscar por codigo empleado?\n";
+		cout<< endl <<"3. Salir\n";
+		cout << endl <<" Escoja una Opcion: ";
+		cin >> opcion_busqueda;
+		switch(opcion_busqueda){
+			case 1:
+				cout <<" BUSQUEDA DPI "<< endl;
+				if(lectura.is_open()){
+				cout<<"Ingresa el DPI a buscar: ";
+				cin>>auxDpi;
+				lectura>>dpi;//Lectura adelantada
+				encontrado=false;
+				while(!lectura.eof()){
+					lectura>>codigo>>nombre>>nombreDos>>apellido>>apelliDos>>salario;//Leyendo todos los campos del registro
+					//comparar cada registro para ver si es encontrado
+					if(strcmp(auxDpi,dpi)==0)//strcmp (funcion de comparacion de cadenas)(recibe dos parametros(dos cadenas a comparar))(devuelve dos valores 0 cuando son iguales y 1 cuando no)
+					{
+						cout<<"-------------------------------------"<<endl;
+						cout<<"Dpi :"<<dpi<<endl;
+						cout<<"Codigo :"<<codigo<<endl;
+						cout<<"Primer nombre :"<<nombre<<endl;
+						cout<<"Segundo nombre :"<<nombreDos<<endl;
+						cout<<"Primer apellido :"<<apellido<<endl;
+						cout<<"Segundo apellido :"<<apelliDos<<endl;
+						cout<<"Salario :"<<salario<<endl;
+						cout<<"-------------------------------------"<<endl;
+						encontrado=true;
+					}
+					lectura>>dpi;//lectura adelantada
+				}
+					if(encontrado==false){
+						cout<<"No hay registros con el Dpi: "<<auxDpi<<endl;
+					}
+				}
+				break;
+			case 2:
+				cout << " BUSQUEDA POR CODIGO DE EMPLEADO "<< endl;
+				if(lectura.is_open()){
+					cout<<"Ingresa el codigo a buscar: ";
+					cin>>auxCodigo;
+					lectura>>dpi;//Lectura adelantada
+					encontrado=false;
+					while(!lectura.eof()){
+						lectura>>codigo>>nombre>>nombreDos>>apellido>>apelliDos>>salario;//Leyendo todos los campos del registro
+						//comparar cada registro para ver si es encontrado
+						if(strcmp(auxCodigo,codigo)==0)//strcmp (funcion de comparacion de cadenas)(recibe dos parametros(dos cadenas a comparar))(devuelve dos valores 0 cuando son iguales y 1 cuando no)
+						{
+							cout<<"-------------------------------------"<<endl;
+							cout<<"Dpi :"<<dpi<<endl;
+							cout<<"Codigo :"<<codigo<<endl;
+							cout<<"Primer nombre :"<<nombre<<endl;
+							cout<<"Segundo nombre :"<<nombreDos<<endl;
+							cout<<"Primer apellido :"<<apellido<<endl;
+							cout<<"Segundo apellido :"<<apelliDos<<endl;
+							cout<<"Salario :"<<salario<<endl;
+							cout<<"-------------------------------------"<<endl;
+							encontrado=true;
+						}
+						lectura>>dpi;//lectura adelantada
+					}
+					if(encontrado==false){
+						cout<<"No hay registros con el codigo: "<<auxCodigo<<endl;
+					}
+				}
+				else{
+					cout<<"No se pudo abrir el archivo, aun no ha sido creado"<<endl;
+					cout<<"O contiene un error"<<endl;
+				}
+				//Cerrando el archivo
+				lectura.close();
+				break;
+			case 3:
+				cout <<" Programa finalizado..."<< endl;
+				repeticion = true;
+				break;
+			default:
+				cout <<" Opcion No Valida "<< endl;
 		}
-		if(encontrado==false){
-			cout<<"No hay registros con el Dpi"<<auxDpi<<endl;
-		}
-	}
-	else{
-		cout<<"No se pudo abrir el archivo, aun no ha sido creado"<<endl;
-		cout<<"O contiene un error"<<endl;
-	}
-	//Cerrando el archivo
-	lectura.close();
+	}while(repeticion!=true);
 }
 void eliminarEmpleado(){
 }
