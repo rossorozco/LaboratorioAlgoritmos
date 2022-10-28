@@ -126,15 +126,13 @@ void ingresoDatos(){//Ingreso de datos
 		cout<<"*********************************************************"<<endl;
 		cout<<"|———————————————————————————————————————————————————————|"<<endl;
 		cout<<"|_INGRESE UNA LETRA:____________________________________|"<<endl;
-		cout<<"| 1. S (para salir)                                     |"<<endl;
-		cout<<"| 2. N (para no salir)                                  |"<<endl;
+		cout<<"| 1. S (para no salir)                                  |"<<endl;
+		cout<<"| 2. N (para salir)                                     |"<<endl;
 		cout<<"|_______________________________________________________|"<<endl;
 		cout<<"*********************************************************"<<endl;;
 		cout<<"Ingrese: ";
 		cin>>respuesta;
-
 	}while(toupper(respuesta)=='S');//toupper (Devuelve una copia de esta cadena convertida en mayúsculas, aplicando las reglas de mayúsculas y minúsculas de la referencia cultural especificada)
-	
 	archsal.close(); //Cerramos el archivo
 	getche();
 	menu();
@@ -170,7 +168,7 @@ void reporte(){
 	system("cls");
 	
 	cout<<"*************************************************************************************"<<endl;
-	cout<<"                             REGISTROS DE TRABAJADORES"<<endl;
+	cout<<"                         REGISTROS DE SALARIOS MAYORES A 10000"<<endl;
 	cout<<"*************************************************************************************"<<endl<<endl;
 	ifstream archivo("datos.txt", ios::in);
 	
@@ -218,7 +216,7 @@ void buscar(){
 	cout<<"| 4. Salario                                            |"<<endl;
 	cout<<"|_______________________________________________________|"<<endl;
 	cout<<"*********************************************************"<<endl;;
-	cout<<"Ingrese el numero: "<<char(162)<<"n \n";
+	cout<<"Ingrese el numero: ";
 	cin>>OpEm;
 
 	switch(OpEm)
@@ -235,6 +233,7 @@ void buscar(){
 			archivo>>primernombre>>segundonombre>>apellido>>apellidos>>salario;//leyendo los campos del registro
 			//comparar cada registro para ver si lo encontramos 
 			if (strcmp(busqueda, dpi)==0){
+			cout<<"****************************************************************************************************\n";	
 			cout<<dpi<<"	"<<primernombre<<"	"<<segundonombre<<"	"<<apellido<<"	"<<apellidos<<"	"<<salario<<endl;	
 			cout<<"****************************************************************************************************\n";
 			encontrar=true;		
@@ -268,6 +267,7 @@ void buscar(){
 			cout<<"****************************************************************************************************\n";
 			encontrar=true;	
 			} else if(strcmp(busqueda, segundonombre)==0){
+			cout<<"****************************************************************************************************\n";
 			cout<<dpi<<"	"<<primernombre<<"	"<<segundonombre<<"	"<<apellido<<"	"<<apellidos<<"	"<<salario<<endl;	
 			cout<<"****************************************************************************************************\n";
 			encontrar=true;	
@@ -303,6 +303,7 @@ void buscar(){
 			cout<<"****************************************************************************************************\n";
 			encontrar=true;	
 			} else if(strcmp(busqueda, apellidos)==0){
+			cout<<"****************************************************************************************************\n";
 			cout<<dpi<<"	"<<primernombre<<"	"<<segundonombre<<"	"<<apellido<<"	"<<apellidos<<"	"<<salario<<endl;	
 			cout<<"****************************************************************************************************\n";
 			encontrar=true;	
@@ -361,7 +362,7 @@ void eliminar(){
 	auxi.open("auxiliar.txt",ios::out);
 	if(auxi.is_open() && archivo.is_open()){
 		cout<<"*************************************************************"<<endl;
-		cout<<"Ingresa el dpi del empleado a buscar \n";
+		cout<<"Ingresa el dpi del empleado a eliminar \n";
 		cin>>busqueda;
 		archivo>>dpi;//lectura adelantada
 		encontrar=false;
@@ -369,6 +370,7 @@ void eliminar(){
 		archivo>>primernombre>>segundonombre>>apellido>>apellidos>>salario;//leyendo los campos del registro
 		//comparar cada registro para ver si lo encontramos 
 		if (strcmp(busqueda, dpi)==0){
+		cout<<"****************************************************************************************************\n";
 		cout<<dpi<<"	"<<primernombre<<"	"<<segundonombre<<"	"<<apellido<<"	"<<apellidos<<"	"<<salario<<endl;	
 		cout<<"****************************************************************************************************\n";
 		encontrar=true;	
@@ -409,8 +411,8 @@ void salidaSistema (){
 	cout<<"*********************************************************"<<endl;
 	cout<<"|———————————————————————————————————————————————————————|"<<endl;
 	cout<<"|_INGRESE EL NUMERO:____________________________________|"<<endl;
-	cout<<"| 1. SI (para salir)                                    |"<<endl;
-	cout<<"| 2. NO (para no salir)                                 |"<<endl;
+	cout<<"| 1. SI                                                 |"<<endl;
+	cout<<"| 2. NO                                                 |"<<endl;
 	cout<<"|_______________________________________________________|"<<endl;
 	cout<<"*********************************************************"<<endl;
 	cout<<"Elija una opcion: "<<endl;
