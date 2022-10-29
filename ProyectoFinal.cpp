@@ -168,7 +168,7 @@ void reporte(){
 	system("cls");
 	
 	cout<<"*************************************************************************************"<<endl;
-	cout<<"                         REGISTROS DE SALARIOS MAYORES A 10000"<<endl;
+	cout<<"                           REGISTROS DE TRABAJADORES"<<endl;
 	cout<<"*************************************************************************************"<<endl<<endl;
 	ifstream archivo("datos.txt", ios::in);
 	
